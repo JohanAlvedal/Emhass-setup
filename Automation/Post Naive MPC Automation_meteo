@@ -1,0 +1,99 @@
+alias: Post Naive MPC Automation_meteo
+description: MPC med Open‑Meteo PV‑forecast
+triggers:
+  - minutes: /10
+    trigger: time_pattern
+  - event: start
+    trigger: homeassistant
+  - entity_id:
+      - input_button.post_naive_mpc_automation
+    trigger: state
+conditions: []
+actions:
+  - data:
+      payload: |
+        {
+          "weather_forecast_cache_only": true,
+          "load_power_forecast": {{ load_power_forecast }},
+          "load_cost_forecast": {{ load_cost_forecast }},
+          "prod_price_forecast": {{ prod_price_forecast }},
+          "prediction_horizon": {{ prediction_horizon }},
+          "soc_init": {{ soc_init }},
+          "soc_final": {{ soc_final }},
+          "P_deferrable_nom": {{ p_deferrable_nom }},
+          "weight_battery_discharge": {{ weight_battery_discharge }},
+          "weight_battery_charge": {{ weight_battery_charge }},
+          "alpha": {{ alpha_value }},
+          "beta": {{ beta_value }},
+          "battery_charge_efficiency": {{ battery_charge_efficiency }},
+          "battery_discharge_efficiency": {{ battery_discharge_efficiency }},
+          "def_total_hours": {{ def_total_hours }},
+          "def_end_timestep": {{ def_end_timestep }},
+          "battery_minimum_state_of_charge": {{ battery_minimum_soc }},
+          "battery_maximum_state_of_charge": {{ battery_maximum_soc }},
+          "set_use_adjusted_pv": {{ is_state('input_boolean.set_use_adjusted_pv', 'on') | lower }},
+          "adjusted_pv_solar_elevation_threshold": {{ adjusted_pv_solar_elevation_threshold }},
+          "costfun": "{{ states('input_select.emhass_costfun') }}"
+        }
+    action: rest_command.post_naive_mpc_automation
+  - delay:
+      seconds: 5
+  - data: {}
+    action: rest_command.publish_data
+mode: single
+variables:
+  prod_prices: >
+    {{
+    (state_attr("sensor.nordpool_kwh_se3_sek_3_10_025","raw_today")|map(attribute="value")|list
+    +
+         state_attr("sensor.nordpool_kwh_se3_sek_3_10_025","raw_tomorrow")|map(attribute="value")|list) | default([]) }}
+  load_costs: >
+    {{
+    (state_attr("sensor.nordpool_tibber","raw_today")|map(attribute="value")|list
+    +
+         state_attr("sensor.nordpool_tibber","raw_tomorrow")|map(attribute="value")|list) | default([]) }}
+  prediction_horizon: |
+    {% set avail = prod_prices[now().hour:]|length %} {{ [avail, 24] | min }}
+  prod_price_forecast: |
+    {{ prod_prices[now().hour:][:prediction_horizon] | tojson }}
+  load_cost_forecast: |
+    {{ load_costs[now().hour:][:prediction_horizon] | tojson }}
+  load_power_forecast: |
+    {{ ([states('sensor.power_load_no_var_loads') | int(0)] +
+        (states('input_text.fi_fo_buffer') | default("") | string).split(',') | map('int') | list)[1:] | tojson }}
+  soc_init: |
+    {{ max(0, states("sensor.battery_state_of_capacity") | int(0)) / 100 }}
+  soc_final: |
+    {{ states('input_number.emhass_soc_final') | int(0) / 100 }}
+  p_deferrable_nom: |
+    {{ [max(3900, states('sensor.go_echarger_265216_nrg_12') | int(0)),
+        max(100, states('sensor.varmvatten_produktion_i_w') | int(0))] | tojson }}
+  def_total_hours: |
+    {{ [states('sensor.ev_additional_charge_hours_if_connected') | int(0),
+        states('input_number.hp_vvb_emhass_on_time') | int(0)] | tojson }}
+  def_end_timestep: >
+    {{ [states('sensor.hours_until_next_user_time') | int(0),
+    states('sensor.hours_until_vvb_done_time') | int(0)] | tojson }}
+  weight_battery_charge: |
+    {{ states('input_number.weight_battery_charge') | float(0) }}
+  weight_battery_discharge: |
+    {{ states('input_number.weight_battery_discharge') | float(0) }}
+  alpha_value: |
+    {{ states('input_number.emhass_alpha') | default('1') | float }}
+  beta_value: |
+    {{ states('input_number.emhass_beta') | default('0') | float }}
+  battery_charge_efficiency: >
+    {{ states('input_number.emhass_battery_charge_efficiency') | default('0.95')
+    | float }}
+  battery_discharge_efficiency: >
+    {{ states('input_number.emhass_battery_discharge_efficiency') |
+    default('0.95') | float }}
+  battery_minimum_soc: >
+    {{ states('input_number.emhass_battery_minimum_state_of_charge') | int(0) /
+    100 }}
+  battery_maximum_soc: >
+    {{ states('input_number.emhass_battery_maximum_state_of_charge') | int(0) /
+    100 }}
+  adjusted_pv_solar_elevation_threshold: >
+    {{ states('input_number.emhass_pv_elevation_threshold') | default(10) |
+    float }}
