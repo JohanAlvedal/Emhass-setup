@@ -1,0 +1,69 @@
+alias: EMHASS infesable  V3.0
+description: if infesable charge 30 min
+triggers:
+  - entity_id: sensor.optim_status
+    from: Optimal
+    id: infesable
+    trigger: state
+  - entity_id: sensor.optim_status
+    to: Optimal
+    id: Optimal
+    trigger: state
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - infesable
+        sequence:
+          - action: notify.mobile_app_iphone13pro
+            data:
+              title: EMHASS
+              message: System has become infeasible
+          - if:
+              - condition: numeric_state
+                entity_id: sensor.battery_state_of_capacity
+                below: sensor.soc_batt_forecast
+              - condition: numeric_state
+                entity_id: sensor.battery_state_of_capacity
+                below: 5
+            then:
+              - action: huawei_solar.forcible_charge_soc
+                metadata: {}
+                data:
+                  target_soc: 5
+                  power: 1000
+                  device_id: 6893ee838a0972bd3e50d9e0faa0ba5a
+          - if:
+              - condition: numeric_state
+                entity_id: sensor.p_deferrable0
+                above: 100
+            then:
+              - target:
+                  entity_id: input_datetime.done_time
+                data:
+                  time: >
+                    {% set behov = states('sensor.ev_additional_charge_hours') |
+                    float(0) %} {% set time_kvar =
+                    states('sensor.hours_until_next_user_time') | float(0) %} {%
+                    set saknas = behov - time_kvar + 1 %} {% set nu_time =
+                    today_at(states('input_datetime.done_time')) %} {% set
+                    ny_time = nu_time + timedelta(hours=saknas) %} {{
+                    ny_time.strftime('%H:%M:%S') }}
+                action: input_datetime.set_datetime
+              - action: input_button.press
+                metadata: {}
+                data: {}
+                target:
+                  entity_id: input_button.post_naive_mpc_automation
+      - conditions:
+          - condition: trigger
+            id: Optimal
+        sequence:
+          - action: notify.mobile_app_iphone13pro
+            data:
+              title: EMHASS
+              message: System has become optimal
+mode: parallel
+max: 10
