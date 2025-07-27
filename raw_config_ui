@@ -1,0 +1,1210 @@
+views:
+  - title: Home
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: horizontal-stack
+                    cards:
+                      - type: gauge
+                        entity: sensor.battery_state_of_capacity
+                        min: 1
+                        max: 100
+                        needle: true
+                        severity:
+                          green: 15
+                          yellow: 4
+                          red: 0
+                        name: SOC
+                      - type: gauge
+                        entity: sensor.battery_charge_discharge_power
+                        needle: true
+                        name: Dis/Cha
+                        severity:
+                          green: -6000
+                          yellow: 0
+                          red: 0
+                        max: 6000
+                        min: -6000
+                      - type: gauge
+                        entity: sensor.inverter_input_power
+                        min: 0
+                        needle: true
+                        max: 12500
+                        severity:
+                          green: 11
+                          yellow: 10000
+                          red: 11500
+                        name: PV
+                      - type: gauge
+                        entity: sensor.processor_use
+                        min: 0
+                        needle: true
+                        max: 100
+                        severity:
+                          green: 0
+                          yellow: 80
+                          red: 90
+                        name: CPU
+          - type: vertical-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: number.battery_maximum_charging_power
+                    name: Battery charge
+                    secondary_info: last-changed
+                  - entity: number.battery_maximum_discharging_power
+                    name: Battery discharge
+                    secondary_info: last-changed
+                state_color: true
+          - type: entities
+            entities:
+              - entity: sensor.batteries_forcible_charge
+                secondary_info: last-changed
+              - entity: sensor.emhass_battery_mode
+                secondary_info: last-changed
+              - entity: sensor.optim_status
+                secondary_info: last-changed
+              - entity: sensor.p_batt_forecast
+                secondary_info: last-changed
+              - entity: sensor.limited_power
+                secondary_info: last-changed
+              - entity: sensor.soc_batt_forecast
+                secondary_info: last-changed
+              - type: weblink
+                name: EMHASS optimization results
+                url: /5b918bf2_emhass/ingress
+          - type: history-graph
+            entities:
+              - entity: input_text.fi_fo_buffer
+            logarithmic_scale: false
+            hours_to_show: 24
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: sensor.1_minute_average
+            color: accent
+            grid_options:
+              columns: full
+            name: 1 minut medel
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: sensor.15_minute_average
+            color: accent
+            grid_options:
+              columns: full
+            name: 15 minuter medel
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: sensor.30_minute_average
+            show_entity_picture: false
+            hide_state: false
+            color: accent
+            grid_options:
+              columns: full
+            name: 30 minuter medel
+          - type: entities
+            entities:
+              - entity: sensor.unit_load_cost
+              - entity: sensor.unit_prod_price
+              - entity: sensor.p_pv_forecast
+              - entity: sensor.p_load_forecast
+              - entity: sensor.p_deferrable0
+              - entity: sensor.p_deferrable1
+              - entity: sensor.soc_batt_forecast
+              - entity: sensor.p_grid_forecast
+              - entity: sensor.p_hybrid_inverter
+              - entity: sensor.power_load_no_var_loads
+              - entity: sensor.inverter_internal_temperature
+              - entity: switch.cleverio1_relay_1
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: automation.post_naive_mpc_automation_test
+                secondary_info: last-triggered
+              - entity: automation.emhass_soc_control_v2
+                secondary_info: last-triggered
+              - entity: input_boolean.automation_timetrigger
+                secondary_info: last-changed
+              - entity: input_boolean.emhass_notify
+                icon: ''
+              - entity: input_button.post_naive_mpc_automation
+                name: Trigger Naive MPC Automation
+              - entity: automation.emhass_batteries_off_below_05_sek
+              - entity: input_select.emhass_charge_mode
+              - entity: input_select.emhass_discharge_mode
+            state_color: true
+            show_header_toggle: false
+          - type: entities
+            title: EMHASS Input Data
+            state_color: true
+            entities:
+              - entity: input_number.weight_battery_charge
+                name: Weight charge
+              - entity: input_number.weight_battery_discharge
+                name: Weight discharge
+              - type: section
+                label: Current Data Weighting
+              - entity: input_number.emhass_beta
+                name: Beta
+              - type: section
+                label: Forecast Data Weighting
+              - entity: input_number.emhass_alpha
+                name: Alpha
+              - type: divider
+              - entity: input_select.emhass_costfun
+              - entity: input_number.emhass_battery_minimum_state_of_charge
+                name: Minimun SOC
+              - entity: input_number.emhass_battery_maximum_state_of_charge
+                name: Maximun SOC
+              - entity: input_number.emhass_battery_charge_efficiency
+                name: Charge Efficiency
+              - entity: input_number.emhass_battery_discharge_efficiency
+                name: Discharge Efficiency
+              - entity: input_number.emhass_soc_final
+              - entity: sensor.nordpool_tibber
+                name: Nordpool Buy
+              - entity: sensor.nordpool_kwh_se3_sek_3_10_0
+                name: Nordpool Sell
+              - entity: sensor.power_load_no_var_loads
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - graph: none
+                    type: sensor
+                    detail: 1
+                    entity: sensor.accumulated_cost_goktytan_4
+                    hours_to_show: 6
+                  - graph: none
+                    type: sensor
+                    detail: 1
+                    entity: sensor.accumulated_reward_goktytan_4
+                    hours_to_show: 6
+                  - graph: none
+                    type: sensor
+                    detail: 1
+                    entity: sensor.totalt_dag
+                    hours_to_show: 6
+                    icon: mdi:cash
+                    name: Kostnad
+          - type: entities
+            entities:
+              - entity: sensor.highest_sell_price
+              - entity: sensor.lowest_buy_cost
+              - entity: sensor.grid_to_house
+                icon: mdi:home-import-outline
+                name: Grid to House (buys)
+              - entity: sensor.house_consumption_power
+              - entity: sensor.load_today
+                name: Load today
+              - entity: sensor.import_today
+              - entity: sensor.accumulated_consumption_current_hour_goktytan_4
+                name: Import current hour
+                icon: mdi:home-import-outline
+              - entity: sensor.battery_to_house
+              - entity: sensor.export_today
+                name: Export today
+              - entity: sensor.pv_today
+              - entity: sensor.input_power_with_efficiency_loss
+              - entity: sensor.ev_today
+              - entity: sensor.overproduction
+          - type: vertical-stack
+            cards:
+              - type: grid
+                cards:
+                  - type: gauge
+                    entity: sensor.power_meter_current
+                    min: -20
+                    max: 20
+                    needle: true
+                    severity:
+                      green: -12
+                      yellow: -16
+                      red: -20
+                    name: Fas1
+                  - type: gauge
+                    entity: sensor.power_meter_current_2
+                    min: -20
+                    max: 20
+                    needle: true
+                    severity:
+                      green: -12
+                      yellow: -16
+                      red: -20
+                    name: Fas2
+                  - type: gauge
+                    entity: sensor.power_meter_current_3
+                    needle: true
+                    max: 20
+                    min: -20
+                    severity:
+                      green: -12
+                      yellow: -16
+                      red: -20
+                    name: Fas3
+              - type: grid
+                cards:
+                  - type: gauge
+                    entity: sensor.power_meter_phase_a_active_power
+                    max: 5000
+                    needle: true
+                    severity:
+                      green: -5000
+                      yellow: 5000
+                      red: 5000
+                    min: -5000
+                    name: Fas1
+                  - type: gauge
+                    entity: sensor.power_meter_phase_b_active_power
+                    max: 5000
+                    needle: true
+                    severity:
+                      green: -5000
+                      yellow: 5000
+                      red: 5000
+                    min: -5000
+                    name: Fas2
+                  - type: gauge
+                    entity: sensor.power_meter_phase_c_active_power
+                    needle: true
+                    max: 5000
+                    severity:
+                      green: -5000
+                      yellow: 5000
+                      red: 5000
+                    min: -5000
+                    name: Fas3
+    badges:
+      - type: entity
+        entity: person.johan
+        show_entity_picture: true
+      - type: custom:mushroom-template-badge
+        content: Laddbox
+        icon: mdi:ev-plug-type2
+        color: green
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/laddbox
+      - type: entity
+        show_name: false
+        show_state: true
+        show_icon: true
+        entity: sensor.nordpool_tibber
+        color: ''
+        tap_action:
+          action: navigate
+          navigation_path: /dashboard-data/9
+      - type: custom:mushroom-template-badge
+        content: Solcast
+        icon: mdi:sun-angle-outline
+        color: yellow
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/solcast
+      - type: custom:mushroom-template-badge
+        content: Förbrukning
+        icon: mdi:power-plug
+        color: blue
+        tap_action:
+          action: navigate
+          navigation_path: /dashboard-data/10
+      - type: custom:mushroom-template-badge
+        content: Kostnad
+        icon: mdi:currency-usd
+        color: blue
+        tap_action:
+          action: navigate
+          navigation_path: /dashboard-data/3
+      - type: custom:mushroom-template-badge
+        content: System
+        icon: mdi:server
+        color: green
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/system
+    cards: []
+    header:
+      card:
+        type: markdown
+        content: '## EMHASS ✨'
+        text_only: true
+  - type: sections
+    max_columns: 2
+    title: Charts
+    path: charts
+    dense_section_placement: true
+    sections:
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            span:
+              start: minute
+            header:
+              show: true
+              title: EMHASS Forecasts
+              show_states: true
+              colorize_states: true
+            now:
+              show: true
+              label: now
+            series:
+              - entity: sensor.p_pv_forecast
+                curve: stepline
+                show:
+                  in_header: before_now
+                stroke_width: 1
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_pv_forecast];
+                  });
+              - entity: sensor.p_batt_forecast
+                curve: stepline
+                show:
+                  in_header: before_now
+                stroke_width: 1
+                data_generator: >
+                  return entity.attributes.battery_scheduled_power.map((entry)
+                  => {
+                    return [new Date(entry.date), entry.p_batt_forecast];
+                  });
+              - entity: sensor.p_load_forecast
+                curve: stepline
+                show:
+                  in_header: before_now
+                stroke_width: 1
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_load_forecast];
+                  });
+              - entity: sensor.p_deferrable0
+                curve: stepline
+                stroke_width: 1
+                show:
+                  in_header: before_now
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable0];
+                  });
+              - entity: sensor.p_deferrable1
+                curve: stepline
+                stroke_width: 1
+                show:
+                  in_header: before_now
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable1];
+                  });
+            view_layout:
+              position: main
+              max: auto
+              min: auto
+          - type: custom:apexcharts-card
+            apex_config:
+              chart:
+                height: 330px
+            all_series_config:
+              unit: W
+              float_precision: 3
+              opacity: 1
+              stroke_width: 3
+            header:
+              title: Solar PV Actual and Forecasted
+              show: true
+              show_states: true
+              colorize_states: true
+            graph_span: 1d
+            span:
+              start: day
+              offset: '-0d'
+            now:
+              show: true
+              label: Now
+            show:
+              last_updated: true
+            yaxis:
+              - id: kWh
+                min: 0
+                max: auto
+                apex_config:
+                  tickAmount: 1
+              - id: header_only
+                show: true
+            series:
+              - entity: sensor.p_pv_forecast
+                type: line
+                stroke_width: 3
+                yaxis_id: kWh
+                color: red
+                name: EMHASS Forecast
+                show:
+                  in_header: true
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_pv_forecast ];});
+              - entity: sensor.inverter_input_power
+                yaxis_id: kWh
+                type: area
+                name: Actual PV Power
+                color: orange
+                opacity: 0.4
+                show:
+                  legend_value: true
+                  in_header: true
+                stroke_width: 1
+                group_by:
+                  func: avg
+                  duration: 1min
+                extend_to: false
+              - entity: sensor.p_pv_forecast
+                type: line
+                stroke_width: 3
+                yaxis_id: kWh
+                color: blue
+                name: PV Power Forecast
+                extend_to: false
+                show:
+                  in_header: true
+                  legend_value: true
+          - type: custom:apexcharts-card
+            apex_config:
+              chart:
+                height: 400px
+                width: 100%
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            span:
+              start: minute
+              offset: '-0h'
+            header:
+              show: true
+              title: Battery, Price & Cost Forecast
+              show_states: true
+              colorize_states: true
+            now:
+              show: true
+              label: Now
+            series:
+              - entity: sensor.unit_load_cost
+                name: Load Cost
+                float_precision: 2
+                yaxis_id: first
+                curve: stepline
+                extend_to: false
+                show:
+                  in_header: before_now
+                  legend_value: false
+                  extremas: min+time
+                stroke_width: 1
+                color: red
+                unit: Sek/kWh
+                color_threshold:
+                  - value: 0
+                    color: cyan
+                  - value: 0.19
+                    color: green
+                  - value: 0.3
+                    color: yellow
+                  - value: 0.4
+                    color: red
+                data_generator: >
+                  return entity.attributes.unit_load_cost_forecasts.map((entry)
+                  => {
+                    return [new Date(entry.date), entry.unit_load_cost];
+                  });
+              - entity: sensor.unit_prod_price
+                name: Prod Price
+                float_precision: 2
+                yaxis_id: first
+                curve: stepline
+                unit: Sek/kWh
+                extend_to: false
+                show:
+                  in_header: before_now
+                  legend_value: false
+                  extremas: max+time
+                color: PURPLE
+                stroke_width: 1
+                data_generator: >
+                  return entity.attributes.unit_prod_price_forecasts.map((entry)
+                  => {
+                    return [new Date(entry.date), entry.unit_prod_price];
+                  });
+              - entity: sensor.soc_batt_forecast
+                float_precision: 0
+                yaxis_id: second
+                time_delta: +30m
+                extend_to: false
+                show:
+                  in_header: before_now
+                  legend_value: false
+                color: green
+                stroke_width: 1
+                name: battery SOC
+                data_generator: >
+                  return entity.attributes.battery_scheduled_soc.map((entry) =>
+                  { 
+                    return [new Date(entry.date), entry.soc_batt_forecast]; });
+            yaxis:
+              - id: first
+                decimals: 1
+                max: ~1
+                min: 0
+                apex_config:
+                  tickAmount: 2
+                  logarithmic: false
+              - id: second
+                show: false
+                opposite: false
+                decimals: 1
+                max: 100
+                min: 0
+                apex_config:
+                  tickAmount: 2
+            view_layout:
+              position: main
+          - type: custom:apexcharts-card
+            apex_config:
+              chart:
+                height: 400px
+                width: 100%
+            span:
+              start: minute
+            header:
+              show: true
+              title: Optimizer
+              show_states: true
+              colorize_states: true
+            now:
+              show: true
+              label: now
+            yaxis:
+              - id: power
+                decimals: 0
+                max: 7000
+              - id: price
+                decimals: 3
+                opposite: true
+            series:
+              - entity: sensor.p_pv_forecast
+                yaxis_id: power
+                curve: stepline
+                show:
+                  in_header: before_now
+                  legend_value: false
+                stroke_width: 1
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_pv_forecast];
+                  });
+              - entity: sensor.p_load_forecast
+                yaxis_id: power
+                curve: stepline
+                show:
+                  in_header: before_now
+                  legend_value: false
+                stroke_width: 1
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_load_forecast];
+                  });
+              - entity: sensor.p_deferrable0
+                name: EV
+                yaxis_id: power
+                type: area
+                stroke_width: 2
+                show:
+                  in_header: before_now
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable0];
+                  });
+              - entity: sensor.nordpool_tibber
+                name: Elpris
+                curve: stepline
+                stroke_width: 1
+                data_generator: |
+                  const todayData = entity.attributes.raw_today.map((entry) => {
+                    return [new Date(entry.start), entry.value];
+                  });
+
+                  const tomorrowData = entity.attributes.raw_tomorrow ?
+                  entity.attributes.raw_tomorrow.map((entry) => {
+                    return [new Date(entry.start), entry.value];
+                  }) : [];
+
+                  return todayData.concat(tomorrowData);
+                show:
+                  legend_value: false
+                  in_header: before_now
+                yaxis_id: price
+                float_precision: 3
+          - type: custom:apexcharts-card
+            apex_config:
+              chart:
+                height: 300px
+                width: 100%
+            header:
+              show: true
+              title: EMHASS Daily Forecast
+              show_states: true
+              colorize_states: true
+            graph_span: 13h
+            span:
+              start: minute
+              offset: '-0h'
+            all_series_config:
+              stroke_width: 2
+              extend_to: now
+            now:
+              show: true
+              label: Now
+            yaxis:
+              - min: auto
+                max: auto
+                decimals: 0
+                apex_config:
+                  forceNiceScale: true
+                  tick_amount: 2
+            series:
+              - entity: sensor.p_pv_forecast
+                type: line
+                stroke_width: 2
+                color: orange
+                unit: kW
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_pv_forecast ? entry.p_pv_forecast / 1000 : 0];
+                  });
+              - entity: sensor.p_load_forecast
+                type: line
+                color: purple
+                stroke_width: 2
+                unit: kW
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_load_forecast ? entry.p_load_forecast / 1000 : 0];
+                  });
+              - entity: sensor.p_batt_forecast
+                type: area
+                curve: stepline
+                color: lightgreen
+                stroke_width: 2
+                unit: kW
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: >
+                  return entity.attributes.battery_scheduled_power.map((entry)
+                  => {
+                    return [new Date(entry.date), entry.p_batt_forecast ? entry.p_batt_forecast / 1000 : 0];
+                  });
+              - entity: sensor.p_grid_forecast
+                type: area
+                curve: stepline
+                color: lightgray
+                stroke_width: 2
+                unit: kW
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.forecasts.map((entry) => {
+                    return [new Date(entry.date), entry.p_grid_forecast ? entry.p_grid_forecast / 1000 : 0];
+                  });
+              - entity: sensor.p_deferrable0
+                type: area
+                curve: stepline
+                color: darkblue
+                stroke_width: 2
+                unit: kW
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable0 ? entry.p_deferrable0 / 1000 : 0];
+                  });
+              - entity: sensor.p_deferrable1
+                type: area
+                curve: stepline
+                stroke_width: 2
+                unit: kW
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable1 ? entry.p_deferrable1 / 1000 : 0];
+                  });
+              - entity: sensor.total_cost_fun_value
+                unit: $
+                invert: true
+                float_precision: 0
+                name: Cost
+                show:
+                  legend_value: false
+                  in_chart: false
+                transform: return x * -1
+            view_layout:
+              position: main
+          - type: custom:apexcharts-card
+            graph_span: 12hr
+            header:
+              show: true
+              title: Solcast Power Curve
+            apex_config:
+              stroke:
+                width: 2
+            yaxis:
+              - id: W
+                decimals: 0
+            series:
+              - entity: sensor.inverter_input_power
+                name: PV
+                yaxis_id: W
+                extend_to: now
+                group_by:
+                  func: avg
+                  duration: 1min
+              - entity: sensor.p_pv_forecast
+                name: Solcast PV
+                yaxis_id: W
+                extend_to: now
+                group_by:
+                  func: avg
+                  duration: 1min
+              - entity: sensor.inverter_input_power
+                name: PV (5 Min Av)
+                yaxis_id: W
+                extend_to: now
+                group_by:
+                  func: avg
+                  duration: 5min
+              - entity: sensor.p_pv_forecast
+                name: Solcast PV (5 Min Av)
+                yaxis_id: W
+                extend_to: now
+                group_by:
+                  func: avg
+                  duration: 5min
+              - entity: sensor.inverter_input_power
+                name: PV (15 Min Av)
+                yaxis_id: W
+                extend_to: now
+                group_by:
+                  func: avg
+                  duration: 15min
+              - entity: sensor.p_pv_forecast
+                name: Solcast PV (15 Min Av)
+                yaxis_id: W
+                extend_to: now
+                group_by:
+                  func: avg
+                  duration: 15min
+          - type: history-graph
+            entities:
+              - entity: sensor.battery_state_of_capacity
+              - entity: sensor.soc_batt_forecast
+            title: SOC Debug
+          - type: history-graph
+            entities:
+              - entity: sensor.p_pv_forecast
+              - entity: sensor.inverter_input_power
+            title: PV Debug
+        column_span: 2
+    cards: []
+  - type: sections
+    max_columns: 4
+    title: Car
+    path: car
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.p_deferrable0
+          - type: entities
+            entities:
+              - entity: sensor.volvo_c40_battery_charge_level
+                name: Volvo SOC
+              - entity: sensor.nordpool_tibber
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                entity: sensor.go_echarger_265216_nrg_12
+                needle: false
+                name: Laddbox
+                severity:
+                  green: 0
+                  yellow: 4000
+                  red: 6400
+                max: 6500
+          - type: vertical-stack
+            cards:
+              - type: grid
+                cards:
+                  - type: gauge
+                    entity: sensor.power_meter_current
+                    min: -20
+                    max: 20
+                    needle: true
+                    severity:
+                      green: -12
+                      yellow: -16
+                      red: -20
+                    name: Fas1
+                  - type: gauge
+                    entity: sensor.power_meter_current_2
+                    min: -20
+                    max: 20
+                    needle: true
+                    severity:
+                      green: -12
+                      yellow: -16
+                      red: -20
+                    name: Fas2
+                  - type: gauge
+                    entity: sensor.power_meter_current_3
+                    needle: true
+                    max: 20
+                    min: -20
+                    severity:
+                      green: -12
+                      yellow: -16
+                      red: -20
+                    name: Fas3
+              - type: grid
+                cards:
+                  - type: gauge
+                    entity: sensor.power_meter_phase_a_active_power
+                    max: 5000
+                    needle: true
+                    severity:
+                      green: -5000
+                      yellow: 5000
+                      red: 5000
+                    min: -5000
+                    name: Fas1
+                  - type: gauge
+                    entity: sensor.power_meter_phase_b_active_power
+                    max: 5000
+                    needle: true
+                    severity:
+                      green: -5000
+                      yellow: 5000
+                      red: 5000
+                    min: -5000
+                    name: Fas2
+                  - type: gauge
+                    entity: sensor.power_meter_phase_c_active_power
+                    needle: true
+                    max: 5000
+                    severity:
+                      green: -5000
+                      yellow: 5000
+                      red: 5000
+                    min: -5000
+                    name: Fas3
+          - type: entities
+            entities:
+              - entity: button.go_echarger_265216_frc_3
+              - entity: button.go_echarger_265216_frc_2
+              - entity: sensor.go_echarger_265216_nrg_12
+              - entity: sensor.ev_today
+              - entity: sensor.go_echarger_265216_nrg_12_yearly_energy_cost
+                name: Go-E Year
+              - entity: sensor.go_echarger_265216_nrg_12_monthly_energy_cost
+                name: Go-E Month
+              - entity: sensor.go_echarger_265216_nrg_12_daily_energy_cost
+                name: Go-E Daily
+              - entity: sensor.go_echarger_265216_nrg_12_real_time_energy_cost
+                name: 'Go-E Now '
+      - type: grid
+        cards:
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: sensor.ev_additional_charge_hours
+            name: EV charge H
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: sensor.hours_until_next_user_time
+          - type: tile
+            features_position: bottom
+            vertical: false
+            name: EV charge %
+            entity: sensor.ev_additional_charge_percentage
+          - type: tile
+            features_position: bottom
+            vertical: false
+            name: EV charge W
+            entity: sensor.ev_additional_charge_watts
+          - type: tile
+            features_position: bottom
+            vertical: false
+            name: EV charge kwh
+            entity: sensor.ev_additional_charge_kwh
+          - type: tile
+            features_position: bottom
+            vertical: false
+            name: EV if connected
+            entity: sensor.ev_additional_charge_hours_if_connected
+          - type: entities
+            entities:
+              - entity: input_number.ev_max_charge_percentage
+              - entity: input_boolean.use_done_time
+              - entity: input_datetime.done_time
+              - entity: input_number.max_kr_value
+              - entity: input_button.post_naive_mpc_automation
+                secondary_info: last-changed
+                name: Trigger Naive MPC Automation
+              - entity: input_boolean.manual_charge
+          - type: custom:apexcharts-card
+            apex_config:
+              chart:
+                height: 300px
+                width: 100%
+            header:
+              show: true
+              title: EMHASS Daily Forecast
+              show_states: true
+              colorize_states: true
+            graph_span: 24h
+            span:
+              start: minute
+              offset: '-2h'
+            all_series_config:
+              stroke_width: 2
+              extend_to: now
+            now:
+              show: true
+              label: Now
+            yaxis:
+              - id: power
+                opposite: false
+                decimals: 0
+                min: auto
+                max: auto
+                apex_config:
+                  forceNiceScale: true
+                  tick_amount: 4
+              - id: price
+                opposite: true
+                decimals: 2
+                min: auto
+                max: auto
+                apex_config:
+                  forceNiceScale: true
+                  tick_amount: 4
+            series:
+              - entity: sensor.p_deferrable0
+                type: area
+                name: Bilen
+                curve: stepline
+                color: darkblue
+                stroke_width: 2
+                unit: kW
+                yaxis_id: power
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable0 ? entry.p_deferrable0 / 1000 : 0];
+                  });
+              - entity: sensor.nordpool_tibber
+                name: Elpris
+                curve: stepline
+                stroke_width: 1
+                yaxis_id: price
+                data_generator: |
+                  const todayData = entity.attributes.raw_today.map((entry) => {
+                    return [new Date(entry.start), entry.value];
+                  });
+
+                  const tomorrowData = entity.attributes.raw_tomorrow ?
+                  entity.attributes.raw_tomorrow.map((entry) => {
+                    return [new Date(entry.start), entry.value];
+                  }) : [];
+
+                  return todayData.concat(tomorrowData);
+                show:
+                  legend_value: false
+                  in_header: before_now
+                float_precision: 3
+            view_layout:
+              position: main
+              max: auto
+              min: auto
+    icon: mdi:ev-station
+    cards: []
+  - type: sections
+    max_columns: 2
+    title: Deferrable Load 1
+    path: deferrable-load-1
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.p_load_forecast
+              - entity: sensor.p_deferrable0
+              - entity: sensor.p_deferrable1
+                secondary_info: last-changed
+              - entity: automation.deferrable_load1_vvb
+                secondary_info: last-triggered
+              - entity: automation.nordpool_block_vvb_6_hours
+              - entity: switch.blockera_varmvatten
+              - entity: input_boolean.hp_extra_warm_water
+              - entity: sensor.extra_warm_water_status
+              - entity: sensor.hp_warm_water_1_top
+              - entity: input_number.hp_vvb_emhass_on_time
+              - entity: input_datetime.vvb_done_time
+            state_color: true
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            apex_config:
+              chart:
+                height: 300px
+                width: 100%
+            header:
+              show: true
+              title: EMHASS Daily Forecast
+              show_states: true
+              colorize_states: true
+            graph_span: 24h
+            span:
+              start: minute
+              offset: '-2h'
+            all_series_config:
+              stroke_width: 2
+              extend_to: now
+            now:
+              show: true
+              label: Now
+            yaxis:
+              - id: power
+                opposite: false
+                decimals: 0
+                min: auto
+                max: auto
+                apex_config:
+                  forceNiceScale: true
+                  tick_amount: 4
+              - id: price
+                opposite: true
+                decimals: 2
+                min: auto
+                max: auto
+                apex_config:
+                  forceNiceScale: true
+                  tick_amount: 4
+            series:
+              - entity: sensor.p_deferrable1
+                type: area
+                name: VVB
+                curve: stepline
+                color: darkblue
+                stroke_width: 2
+                unit: kW
+                yaxis_id: power
+                show:
+                  in_header: false
+                  legend_value: false
+                data_generator: |
+                  return entity.attributes.deferrables_schedule.map((entry) => {
+                    return [new Date(entry.date), entry.p_deferrable1 ? entry.p_deferrable1 / 1000 : 0];
+                  });
+              - entity: sensor.nordpool_tibber
+                name: Elpris
+                curve: stepline
+                stroke_width: 1
+                yaxis_id: price
+                data_generator: |
+                  const todayData = entity.attributes.raw_today.map((entry) => {
+                    return [new Date(entry.start), entry.value];
+                  });
+
+                  const tomorrowData = entity.attributes.raw_tomorrow ?
+                  entity.attributes.raw_tomorrow.map((entry) => {
+                    return [new Date(entry.start), entry.value];
+                  }) : [];
+
+                  return todayData.concat(tomorrowData);
+                show:
+                  legend_value: false
+                  in_header: before_now
+                float_precision: 3
+            view_layout:
+              position: main
+              max: auto
+              min: auto
+  - type: sections
+    max_columns: 3
+    title: ML PV Traning
+    path: ml-traning
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: input_select.emhass_pv_ml_model
+                icon: ''
+              - entity: input_number.emhass_historic_pv_days
+              - entity: input_number.emhass_pv_elevation_threshold
+              - entity: automation.emhass_train_pv_adjustment_model_daily
+              - entity: input_boolean.set_use_adjusted_pv
+              - entity: input_button.post_naive_mpc_automation
+            title: PV ML
+            state_color: true
+    cards: []
+  - type: sections
+    max_columns: 2
+    title: Test
+    path: test
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:html-template-card
+                title: Batteriprognos
+                ignore_line_breaks: true
+                content: |
+                  <div style="width: 100%; overflow-x: auto;">
+                    {{ state_attr('sensor.battery_timeline_full', 'friendly_timeline') }}
+                  </div>
+            grid_options:
+              columns: full
+          - title: History
+            type: history-graph
+            entities:
+              - entity: number.battery_maximum_charging_power
+              - entity: sensor.battery_status_2
+              - entity: number.battery_maximum_discharging_power
+            hours_to_show: 12
+            grid_options:
+              columns: full
+        column_span: 2
+    dense_section_placement: true
+    cards: []
