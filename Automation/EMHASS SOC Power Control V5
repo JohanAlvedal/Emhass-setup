@@ -19,7 +19,10 @@ triggers:
       hours: 0
       minutes: 0
       seconds: 3
-conditions: []
+conditions:
+  - condition: state
+    entity_id: switch.predbat_set_read_only
+    state: "on"
 actions:
   - choose:
       - conditions:
