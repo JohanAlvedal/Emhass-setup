@@ -1,0 +1,24 @@
+alias: Fi fo buffer kwh_read_sensor_data
+description: ""
+triggers:
+  - minutes: /15
+    trigger: time_pattern
+conditions: []
+actions:
+  - target:
+      entity_id: input_text.fi_fo_buffer
+    data:
+      value: >
+        {{ (states('input_text.fi_fo_buffer').split(',')[1:48]  + [
+        (states('sensor.15_minute_average')|float(0)*1)|int]) |join(',') }}
+    action: input_text.set_value
+    enabled: false
+  - target:
+      entity_id:
+        - input_text.fi_fo_buffer
+    data:
+      value: >
+        {{ (states('input_text.fi_fo_buffer').split(',')[1:48]  + [
+        (states('sensor.15_minute_average')|float(0)*1)|int]) |join(',') }}
+    action: input_text.set_value
+mode: single
