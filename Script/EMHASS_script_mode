@@ -1,0 +1,33 @@
+choose:
+  - conditions:
+      - condition: state
+        entity_id: input_select.emhass_charge_mode
+        state: Limited Power
+    sequence:
+      - action: script.huawei_limited_power_charge
+        metadata: {}
+        data: {}
+  - conditions:
+      - condition: state
+        entity_id: input_select.emhass_charge_mode
+        state: Battery Power
+    sequence:
+      - action: script.huawei_p_batt_charge_forecast
+        metadata: {}
+        data: {}
+  - conditions:
+      - condition: state
+        entity_id: input_select.emhass_charge_mode
+        state: 5000 W
+    sequence:
+      - action: script.huawei_charging_power_5000w
+        metadata: {}
+        data: {}
+  - conditions:
+      - condition: state
+        entity_id: input_select.emhass_charge_mode
+        state: 3500 W
+    sequence:
+      - action: script.emhass_charging_power_2500
+        metadata: {}
+        data: {}
