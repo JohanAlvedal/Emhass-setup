@@ -1,0 +1,36 @@
+sequence:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: input_select.emhass_discharge_mode
+            state: Limited Power
+        sequence:
+          - action: script.huawei_limited_power_forecast
+            metadata: {}
+            data: {}
+      - conditions:
+          - condition: state
+            entity_id: input_select.emhass_discharge_mode
+            state: Battery Power
+        sequence:
+          - action: script.huawei_p_batt_forecast
+            metadata: {}
+            data: {}
+      - conditions:
+          - condition: state
+            entity_id: input_select.emhass_discharge_mode
+            state: 5000 W
+        sequence:
+          - action: script.huawei_discharging_power_5000
+            metadata: {}
+            data: {}
+      - conditions:
+          - condition: state
+            entity_id: input_select.emhass_discharge_mode
+            state: 3500 W
+        sequence:
+          - action: script.huawei_discharging_power_3500w
+            metadata: {}
+            data: {}
+alias: EMHASS Discharge Mode
+description: ""
