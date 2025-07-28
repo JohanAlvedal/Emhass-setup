@@ -1,0 +1,10 @@
+alias: EMHASS Train PV Adjustment Model Daily
+description: Train EMHASS PV forecast adjustment model
+triggers:
+  - at: "02:00:00"
+    trigger: time
+conditions: []
+actions:
+  - action: rest_command.emhass_pv_model_fit
+    data: {}
+mode: single
