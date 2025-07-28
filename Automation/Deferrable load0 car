@@ -1,0 +1,47 @@
+alias: Deferrable load0 car
+description: ""
+triggers:
+  - entity_id: sensor.p_deferrable0
+    above: 100
+    trigger: numeric_state
+  - entity_id: sensor.p_deferrable0
+    below: 10
+    trigger: numeric_state
+  - trigger: time_pattern
+    minutes: /10
+conditions:
+  - condition: state
+    entity_id: input_boolean.manual_charge
+    state: "off"
+actions:
+  - choose:
+      - conditions:
+          - condition: numeric_state
+            entity_id: sensor.p_deferrable0
+            below: 10
+        sequence:
+          - target:
+              entity_id: button.go_echarger_265216_frc_2
+            alias: Stop charge
+            action: button.press
+            data: {}
+      - conditions:
+          - condition: numeric_state
+            entity_id: sensor.p_deferrable0
+            above: 100
+        sequence:
+          - target:
+              entity_id: button.go_echarger_265216_frc_3
+            alias: Start charge
+            action: button.press
+            data: {}
+          - action: script.huawei_discharging_power_0w
+            data: {}
+          - delay: "00:00:05"
+          - condition: time
+            after: "22:00:00"
+            before: "08:00:00"
+          - alias: Night charge limit
+            action: script.emhass_charging_power_2500
+            data: {}
+mode: single
