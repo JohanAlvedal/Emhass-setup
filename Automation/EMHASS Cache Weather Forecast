@@ -1,0 +1,23 @@
+alias: EMHASS Cache Weather Forecast
+description: ""
+triggers:
+  - trigger: time
+    at: "04:00:00"
+  - trigger: time
+    at: "06:00:00"
+  - trigger: time
+    at: "09:00:00"
+  - trigger: time
+    at: "12:00:00"
+  - trigger: time
+    at: "15:00:00"
+  - trigger: time
+    at: "18:00:00"
+  - trigger: time
+    at: "21:00:00"
+conditions: []
+actions:
+  - action: rest_command.emhass_weather_forecast_cache
+    metadata: {}
+    data: {}
+mode: single
