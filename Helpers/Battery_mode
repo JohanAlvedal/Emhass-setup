@@ -1,0 +1,30 @@
+{% set p_batt = states('sensor.p_batt_forecast') %}
+{% set p_grid = states('sensor.p_grid_forecast') %}
+{% set soc = states('sensor.battery_state_of_capacity') | float(0) %}
+
+{% if p_batt == 'unavailable' or p_grid == 'unavailable' %}
+  Unknown
+{% else %}
+  {% set p_batt = p_batt | float(0) %}
+  {% set p_grid = p_grid | float(0) %}
+
+  {% if p_batt == 0 %}
+    Idle
+  {% elif p_grid == 0 %}
+    Follow Grid
+  {% elif p_batt < 0 %}
+    {% if soc >= 99 %}
+      Idle
+    {% else %}
+      Forcible Charge
+    {% endif %}
+  {% elif p_batt > 0 %}
+    {% if soc <= 6 %}
+      Idle
+    {% else %}
+      Forcible Discharge
+    {% endif %}
+  {% else %}
+    Unknown
+  {% endif %}
+{% endif %}
