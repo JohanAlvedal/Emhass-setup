@@ -1,0 +1,17 @@
+{# Hämta attributet 'battery_scheduled_soc', eller sätt en tom lista om det saknas #}
+{%- set battery_soc = state_attr('sensor.soc_batt_forecast', 'battery_scheduled_soc') or [] -%}
+
+{# Kontrollera om det finns ett första element i listan, annars använd en tom dictionary #}
+{%- set third_row = battery_soc[0] if battery_soc|length > 0 else {} -%}
+
+{# Hämta värdet 'soc_batt_forecast' från 'third_row', eller sätt till 0 om det saknas #}
+{%- set soc_value = third_row.get('soc_batt_forecast', 0) | float -%}
+
+{# Beräkna råkraft baserat på batteriets nuvarande kapacitet och det planerade SOC-värdet #}
+{%- set raw_power = ((states('sensor.battery_state_of_capacity')|float(0) - soc_value) / 100 * 10000 / 0.5 / 0.9) | round(0) -%}
+
+{# Begränsa kraften till intervallet -4700 till 5000 #}
+{%- set limited_power = min(max(raw_power, -4700), 5000) -%}
+
+{# Returnera det beräknade värdet #}
+{{ limited_power }}
